@@ -37,6 +37,12 @@
     opacity: 0;
     transform: translateY(40px);
   }
+
+  /* Bento cards initial state for GSAP */
+  .bento-card.gs-reveal {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
 }
 
 /* Lenis */

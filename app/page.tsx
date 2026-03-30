@@ -3,6 +3,7 @@ import { Hero } from '@/components/Hero'
 import { Services } from '@/components/Services'
 import { Work } from '@/components/Work'
 import { DepthGallery } from '@/components/DepthGallery'
+import { BentoGrid } from '@/components/BentoGrid'
 import { About } from '@/components/About'
 import { Process } from '@/components/Process'
 import { Contact } from '@/components/Contact'
@@ -19,6 +20,7 @@ export default function Home() {
         <Services />
         <Work />
         <DepthGallery />
+        <BentoGrid />
         <About />
         <Process />
         <Contact />

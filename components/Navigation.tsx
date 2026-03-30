@@ -6,10 +6,10 @@ import { useLenis } from 'lenis/react'
 import { Menu, X } from 'lucide-react'
 
 const navLinks = [
+  { label: 'Services', href: '#services' },
   { label: 'Work', href: '#work' },
   { label: 'Gallery', href: '#gallery' },
-  { label: 'Services', href: '#services' },
-  { label: 'About', href: '#about' },
+  { label: 'About', href: '#bento' },
   { label: 'Process', href: '#process' },
   { label: 'Contact', href: '#contact' },
 ]

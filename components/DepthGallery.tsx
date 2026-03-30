@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect, useCallback, useState } from 'react'
+import { useRef } from 'react'
 import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap'
 import { ProjectImage } from '@/components/ProjectImage'
 
@@ -10,213 +10,214 @@ interface GalleryItem {
   hue: number
 }
 
-const galleryItems: GalleryItem[] = [
+const topRow: GalleryItem[] = [
   { title: 'Voyager Travel', category: 'Web App', hue: 25 },
   { title: 'Savoré Restaurant', category: 'Mobile', hue: 240 },
   { title: 'NexaRealty', category: 'SaaS', hue: 160 },
   { title: 'PulseClinic', category: 'Healthcare', hue: 330 },
   { title: 'ShopWave', category: 'E-Commerce', hue: 200 },
-  { title: 'FitTrack', category: 'Mobile App', hue: 50 },
+  { title: 'FitTrack', category: 'Fitness', hue: 50 },
   { title: 'PayFlow', category: 'Fintech', hue: 270 },
   { title: 'LearnHub', category: 'EdTech', hue: 120 },
+]
+
+const bottomRow: GalleryItem[] = [
   { title: 'CloudDesk', category: 'SaaS', hue: 190 },
   { title: 'ConnectApp', category: 'Social', hue: 350 },
   { title: 'MindForge', category: 'AI Tool', hue: 280 },
   { title: 'DataPulse', category: 'Dashboard', hue: 140 },
+  { title: 'AutoPilot', category: 'Automation', hue: 35 },
+  { title: 'HealthSync', category: 'MedTech', hue: 170 },
+  { title: 'CryptoVault', category: 'Web3', hue: 260 },
+  { title: 'EduStream', category: 'Streaming', hue: 310 },
 ]
 
-// Deterministic layout positions (percentage offset from center)
-const positions = [
-  { x: -28, y: -20 }, { x: 25, y: -15 }, { x: -15, y: 22 },
-  { x: 30, y: 10 }, { x: -30, y: -5 }, { x: 20, y: -25 },
-  { x: -10, y: 25 }, { x: 28, y: 18 }, { x: -25, y: -22 },
-  { x: 15, y: 20 }, { x: -20, y: 8 }, { x: 22, y: -18 },
-]
+const ANGLE_STEP = 360 / topRow.length
+const RADIUS = 550
 
-const Z_GAP = 600
-const PERSPECTIVE = 1200
+function CylinderRow({
+  items,
+  refProp,
+  yOffset,
+  angleOffset = 0,
+}: {
+  items: GalleryItem[]
+  refProp: React.RefObject<HTMLDivElement | null>
+  yOffset: number
+  angleOffset?: number
+}) {
+  return (
+    <div
+      ref={refProp}
+      style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        width: 0,
+        height: 0,
+        transformStyle: 'preserve-3d',
+        transform: `translateY(${yOffset}px)`,
+      }}
+    >
+      {items.map((item, i) => {
+        const angle = i * ANGLE_STEP + angleOffset
+        return (
+          <div
+            key={i}
+            className="absolute group cursor-pointer"
+            style={{
+              width: '300px',
+              height: '190px',
+              marginLeft: '-150px',
+              marginTop: '-95px',
+              transform: `rotateY(${angle}deg) translateZ(${RADIUS}px)`,
+              backfaceVisibility: 'hidden',
+            }}
+          >
+            <div className="w-full h-full rounded-xl overflow-hidden border border-white/10 shadow-2xl transition-transform duration-300 group-hover:scale-105">
+              <ProjectImage
+                title={item.title}
+                category={item.category}
+                hue={item.hue}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-end p-4">
+                <div className="translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                  <span className="text-[10px] uppercase tracking-widest text-accent font-bold">{item.category}</span>
+                  <h4 className="text-white font-heading font-bold text-sm">{item.title}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 export function DepthGallery() {
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const pinRef = useRef<HTMLDivElement>(null)
   const viewportRef = useRef<HTMLDivElement>(null)
+  const topRef = useRef<HTMLDivElement>(null)
+  const bottomRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<HTMLDivElement>(null)
-  const [isActive, setIsActive] = useState(false)
 
   useGSAP(
     () => {
-      const scene = sceneRef.current
-      const wrapper = wrapperRef.current
-      if (!scene || !wrapper) return
-
-      const totalDepth = galleryItems.length * Z_GAP + 500
-
+      // Pin the viewport for the duration of the scroll
       ScrollTrigger.create({
-        trigger: wrapper,
+        trigger: pinRef.current,
         start: 'top top',
         end: 'bottom bottom',
-        onEnter: () => setIsActive(true),
-        onLeave: () => setIsActive(false),
-        onEnterBack: () => setIsActive(true),
-        onLeaveBack: () => setIsActive(false),
+        pin: viewportRef.current,
+        pinSpacing: false,
       })
 
-      gsap.to(scene, {
-        z: totalDepth,
+      // Top row spins clockwise
+      gsap.to(topRef.current, {
+        rotateY: 360,
         ease: 'none',
         scrollTrigger: {
-          trigger: wrapper,
+          trigger: pinRef.current,
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 1.5,
+          scrub: 1,
         },
       })
 
-      gsap.to('.depth-label', {
-        opacity: 1, y: 0, duration: 0.6,
-        scrollTrigger: { trigger: wrapper, start: 'top 80%' },
-      })
-
-      gsap.to('.depth-header', {
-        opacity: 0, y: -50, ease: 'none',
+      // Bottom row spins counter-clockwise
+      gsap.to(bottomRef.current, {
+        rotateY: -360,
+        ease: 'none',
         scrollTrigger: {
-          trigger: wrapper,
+          trigger: pinRef.current,
           start: 'top top',
-          end: '10% top',
-          scrub: true,
+          end: 'bottom bottom',
+          scrub: 1,
         },
+      })
+
+      // Slight scene tilt on scroll
+      gsap.fromTo(
+        sceneRef.current,
+        { rotateX: -8 },
+        {
+          rotateX: 8,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: pinRef.current,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1,
+          },
+        }
+      )
+
+      // Header animations
+      gsap.to('.gallery-label', {
+        opacity: 1, y: 0, duration: 0.6,
+        scrollTrigger: { trigger: pinRef.current, start: 'top 80%' },
+      })
+      gsap.to('.gallery-title', {
+        opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
+        scrollTrigger: { trigger: pinRef.current, start: 'top 78%' },
       })
     },
-    { scope: wrapperRef }
+    { scope: pinRef }
   )
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!viewportRef.current || !isActive) return
-    const xPct = 50 + ((e.clientX / window.innerWidth) - 0.5) * 8
-    const yPct = 50 + ((e.clientY / window.innerHeight) - 0.5) * 8
-    gsap.to(viewportRef.current, {
-      perspectiveOrigin: `${xPct}% ${yPct}%`,
-      duration: 0.8,
-      ease: 'power2.out',
-    })
-  }, [isActive])
-
-  useEffect(() => {
-    const isFine = window.matchMedia('(pointer: fine)').matches
-    if (!isFine) return
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [handleMouseMove])
 
   return (
     <section id="gallery">
-      <div
-        ref={wrapperRef}
-        className="relative"
-        style={{ height: `${galleryItems.length * 80 + 100}vh` }}
-      >
-        {/* Header */}
-        <div className="depth-header sticky top-0 z-20 pt-32 pb-16 text-center pointer-events-none">
-          <span className="depth-label gs-reveal inline-block text-xs font-semibold tracking-[0.3em] uppercase text-accent mb-4">
-            Into the Void
-          </span>
-          <h2 className="depth-label gs-reveal text-4xl md:text-5xl lg:text-6xl font-heading font-black leading-tight">
-            Explore our
-            <br />
-            <span className="text-muted">universe</span>
-          </h2>
-        </div>
-
-        {/* Fixed 3D viewport */}
+      {/* Scroll container — 200vh means one full screen of scrolling drives the rotation */}
+      <div ref={pinRef} style={{ height: '200vh' }}>
+        {/* This gets pinned */}
         <div
           ref={viewportRef}
-          className="fixed top-0 left-0 w-full h-screen overflow-hidden transition-opacity duration-500"
-          style={{
-            perspective: `${PERSPECTIVE}px`,
-            perspectiveOrigin: '50% 50%',
-            opacity: isActive ? 1 : 0,
-            pointerEvents: isActive ? 'auto' : 'none',
-            zIndex: isActive ? 5 : -1,
-          }}
+          className="h-screen w-full overflow-hidden relative"
+          style={{ perspective: '1200px' }}
         >
+          {/* Title overlay */}
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
+            <span className="gallery-label gs-reveal inline-block text-xs font-semibold tracking-[0.3em] uppercase text-accent mb-4">
+              Our Universe
+            </span>
+            <h2 className="gallery-title gs-reveal text-5xl md:text-7xl lg:text-8xl font-heading font-black leading-[0.9] tracking-tight text-center">
+              EXPERT DIGITAL
+              <br />
+              <span className="text-muted">PRODUCTION</span>
+            </h2>
+          </div>
+
           {/* 3D scene */}
           <div
             ref={sceneRef}
+            className="absolute inset-0 flex items-center justify-center"
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
               transformStyle: 'preserve-3d',
-              transform: 'translateZ(0px)',
+              transform: 'rotateX(-8deg)',
             }}
           >
-            {galleryItems.map((item, i) => {
-              const pos = positions[i % positions.length]
-              const zDepth = -(i + 1) * Z_GAP
-
-              return (
-                <div
-                  key={i}
-                  className="absolute group cursor-pointer"
-                  style={{
-                    left: `${50 + pos.x}%`,
-                    top: `${50 + pos.y}%`,
-                    transform: `translate(-50%, -50%) translateZ(${zDepth}px)`,
-                    width: 'clamp(200px, 22vw, 380px)',
-                    aspectRatio: '16 / 10',
-                  }}
-                >
-                  {/* Card */}
-                  <div
-                    className="relative w-full h-full rounded-2xl overflow-hidden border border-white/10"
-                    style={{
-                      boxShadow: `0 20px 60px -10px hsla(${item.hue}, 70%, 30%, 0.4)`,
-                    }}
-                  >
-                    <ProjectImage
-                      title={item.title}
-                      category={item.category}
-                      hue={item.hue}
-                      className="w-full h-full object-cover"
-                    />
-
-                    {/* Hover overlay */}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-400 flex items-end p-5">
-                      <div className="translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-400">
-                        <span className="text-[10px] uppercase tracking-widest text-accent font-bold">
-                          {item.category}
-                        </span>
-                        <h4 className="text-white font-heading font-bold text-base mt-0.5">
-                          {item.title}
-                        </h4>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Glow */}
-                  <div
-                    className="absolute -inset-2 rounded-2xl -z-10 blur-2xl opacity-20"
-                    style={{ background: `hsl(${item.hue}, 60%, 40%)` }}
-                  />
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Center crosshair */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10">
-            <div className="w-5 h-5 border border-white/10 rounded-full" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 bg-white/30 rounded-full" />
+            <div style={{ position: 'relative', transformStyle: 'preserve-3d' }}>
+              <CylinderRow items={topRow} refProp={topRef} yOffset={-110} />
+              <CylinderRow items={bottomRow} refProp={bottomRef} yOffset={110} angleOffset={ANGLE_STEP / 2} />
+            </div>
           </div>
 
           {/* Vignette */}
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 pointer-events-none z-20"
             style={{
-              background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.85) 100%)',
+              background: 'radial-gradient(ellipse at center, transparent 35%, rgba(10,10,10,0.85) 100%)',
             }}
           />
+
+          {/* Side fades */}
+          <div className="absolute inset-y-0 left-0 w-40 pointer-events-none z-20" style={{ background: 'linear-gradient(to right, #0A0A0A, transparent)' }} />
+          <div className="absolute inset-y-0 right-0 w-40 pointer-events-none z-20" style={{ background: 'linear-gradient(to left, #0A0A0A, transparent)' }} />
+
+          {/* Top/bottom fades for clean transition */}
+          <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none z-20" style={{ background: 'linear-gradient(to bottom, #0A0A0A, transparent)' }} />
+          <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none z-20" style={{ background: 'linear-gradient(to top, #0A0A0A, transparent)' }} />
         </div>
       </div>
     </section>
