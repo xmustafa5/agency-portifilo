@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useEffect, useCallback } from 'react'
 import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap'
 import { ProjectImage } from '@/components/ProjectImage'
 
@@ -10,7 +10,7 @@ interface GalleryItem {
   hue: number
 }
 
-const topRow: GalleryItem[] = [
+const row1: GalleryItem[] = [
   { title: 'Voyager Travel', category: 'Web App', hue: 25 },
   { title: 'Savoré Restaurant', category: 'Mobile', hue: 240 },
   { title: 'NexaRealty', category: 'SaaS', hue: 160 },
@@ -19,9 +19,11 @@ const topRow: GalleryItem[] = [
   { title: 'FitTrack', category: 'Fitness', hue: 50 },
   { title: 'PayFlow', category: 'Fintech', hue: 270 },
   { title: 'LearnHub', category: 'EdTech', hue: 120 },
+  { title: 'PixelForge', category: 'Design', hue: 300 },
+  { title: 'TaskFlow', category: 'Productivity', hue: 80 },
 ]
 
-const bottomRow: GalleryItem[] = [
+const row2: GalleryItem[] = [
   { title: 'CloudDesk', category: 'SaaS', hue: 190 },
   { title: 'ConnectApp', category: 'Social', hue: 350 },
   { title: 'MindForge', category: 'AI Tool', hue: 280 },
@@ -30,10 +32,26 @@ const bottomRow: GalleryItem[] = [
   { title: 'HealthSync', category: 'MedTech', hue: 170 },
   { title: 'CryptoVault', category: 'Web3', hue: 260 },
   { title: 'EduStream', category: 'Streaming', hue: 310 },
+  { title: 'GreenLens', category: 'Climate', hue: 145 },
+  { title: 'SoundWave', category: 'Audio', hue: 20 },
 ]
 
-const ANGLE_STEP = 360 / topRow.length
-const RADIUS = 550
+const row3: GalleryItem[] = [
+  { title: 'ArtBoard', category: 'Creative', hue: 290 },
+  { title: 'DevStack', category: 'Dev Tools', hue: 210 },
+  { title: 'MapQuest', category: 'Travel', hue: 40 },
+  { title: 'BlockBase', category: 'Web3', hue: 250 },
+  { title: 'FoodieGo', category: 'Delivery', hue: 15 },
+  { title: 'MediTrack', category: 'Health', hue: 175 },
+  { title: 'AdVantage', category: 'Marketing', hue: 340 },
+  { title: 'CodeForge', category: 'Platform', hue: 225 },
+  { title: 'NightOwl', category: 'Analytics', hue: 270 },
+  { title: 'SwiftPay', category: 'Finance', hue: 100 },
+]
+
+const ITEMS_PER_ROW = row1.length
+const ANGLE_STEP = 360 / ITEMS_PER_ROW
+const RADIUS = 620
 
 function CylinderRow({
   items,
@@ -56,7 +74,7 @@ function CylinderRow({
         width: 0,
         height: 0,
         transformStyle: 'preserve-3d',
-        transform: `translateY(${yOffset}px)`,
+        transform: `translateY(${yOffset}px)`
       }}
     >
       {items.map((item, i) => {
@@ -66,11 +84,11 @@ function CylinderRow({
             key={i}
             className="absolute group cursor-pointer"
             style={{
-              width: '300px',
-              height: '190px',
-              marginLeft: '-150px',
-              marginTop: '-95px',
-              transform: `rotateY(${angle}deg) translateZ(${RADIUS}px)`,
+              width: '280px',
+              height: '175px',
+              marginLeft: '-140px',
+              marginTop: '-87px',
+              transform: `rotateY(${angle}deg) translateZ(-${RADIUS}px)`,
               backfaceVisibility: 'hidden',
             }}
           >
@@ -98,13 +116,14 @@ function CylinderRow({
 export function DepthGallery() {
   const pinRef = useRef<HTMLDivElement>(null)
   const viewportRef = useRef<HTMLDivElement>(null)
-  const topRef = useRef<HTMLDivElement>(null)
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const row1Ref = useRef<HTMLDivElement>(null)
+  const row2Ref = useRef<HTMLDivElement>(null)
+  const row3Ref = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<HTMLDivElement>(null)
 
   useGSAP(
     () => {
-      // Pin the viewport for the duration of the scroll
+      // Pin the viewport
       ScrollTrigger.create({
         trigger: pinRef.current,
         start: 'top top',
@@ -113,47 +132,28 @@ export function DepthGallery() {
         pinSpacing: false,
       })
 
-      // Top row spins clockwise
-      gsap.to(topRef.current, {
-        rotateY: 360,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: pinRef.current,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1,
-        },
+      const scrubConfig = {
+        trigger: pinRef.current,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1,
+      }
+
+      // Row 1 (top) — clockwise
+      gsap.to(row1Ref.current, { rotateY: 360, ease: 'none', scrollTrigger: scrubConfig })
+
+      // Row 2 (middle) — counter-clockwise, 1.5x speed
+      gsap.to(row2Ref.current, { rotateY: -540, ease: 'none', scrollTrigger: { ...scrubConfig } })
+
+      // Row 3 (bottom) — clockwise, 1.25x speed
+      gsap.to(row3Ref.current, { rotateY: 450, ease: 'none', scrollTrigger: { ...scrubConfig } })
+
+      // Scene tilt on scroll
+      gsap.fromTo(sceneRef.current, { rotateX: -12 }, {
+        rotateX: 12, ease: 'none', scrollTrigger: { ...scrubConfig },
       })
 
-      // Bottom row spins counter-clockwise
-      gsap.to(bottomRef.current, {
-        rotateY: -360,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: pinRef.current,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1,
-        },
-      })
-
-      // Slight scene tilt on scroll
-      gsap.fromTo(
-        sceneRef.current,
-        { rotateX: -8 },
-        {
-          rotateX: 8,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: pinRef.current,
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: 1,
-          },
-        }
-      )
-
-      // Header animations
+      // Header
       gsap.to('.gallery-label', {
         opacity: 1, y: 0, duration: 0.6,
         scrollTrigger: { trigger: pinRef.current, start: 'top 80%' },
@@ -166,11 +166,34 @@ export function DepthGallery() {
     { scope: pinRef }
   )
 
+  // Mouse tilt
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!sceneRef.current || !viewportRef.current) return
+    const xNorm = (e.clientX / window.innerWidth - 0.5) * 2
+    const yNorm = (e.clientY / window.innerHeight - 0.5) * 2
+    gsap.to(sceneRef.current, {
+      rotateY: xNorm * 8,
+      duration: 0.8,
+      ease: 'power2.out',
+      overwrite: 'auto',
+    })
+    gsap.to(viewportRef.current, {
+      perspectiveOrigin: `${50 + xNorm * 5}% ${50 + yNorm * 5}%`,
+      duration: 0.8,
+      ease: 'power2.out',
+      overwrite: 'auto',
+    })
+  }, [])
+
+  useEffect(() => {
+    if (!window.matchMedia('(pointer: fine)').matches) return
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [handleMouseMove])
+
   return (
     <section id="gallery">
-      {/* Scroll container — 200vh means one full screen of scrolling drives the rotation */}
-      <div ref={pinRef} style={{ height: '200vh' }}>
-        {/* This gets pinned */}
+      <div ref={pinRef} style={{ height: '250vh' }}>
         <div
           ref={viewportRef}
           className="h-screen w-full overflow-hidden relative"
@@ -192,32 +215,23 @@ export function DepthGallery() {
           <div
             ref={sceneRef}
             className="absolute inset-0 flex items-center justify-center"
-            style={{
-              transformStyle: 'preserve-3d',
-              transform: 'rotateX(-8deg)',
-            }}
+            style={{ transformStyle: 'preserve-3d', transform: 'rotateX(-12deg)' }}
           >
             <div style={{ position: 'relative', transformStyle: 'preserve-3d' }}>
-              <CylinderRow items={topRow} refProp={topRef} yOffset={-110} />
-              <CylinderRow items={bottomRow} refProp={bottomRef} yOffset={110} angleOffset={ANGLE_STEP / 2} />
+              <CylinderRow items={row1} refProp={row1Ref} yOffset={-200} />
+              <CylinderRow items={row2} refProp={row2Ref} yOffset={0} angleOffset={ANGLE_STEP / 1} />
+              <CylinderRow items={row3} refProp={row3Ref} yOffset={200} angleOffset={ANGLE_STEP / 1} />
             </div>
           </div>
 
           {/* Vignette */}
-          <div
-            className="absolute inset-0 pointer-events-none z-20"
-            style={{
-              background: 'radial-gradient(ellipse at center, transparent 35%, rgba(10,10,10,0.85) 100%)',
-            }}
-          />
+          <div className="absolute inset-0 pointer-events-none z-20" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.9) 100%)' }} />
 
-          {/* Side fades */}
-          <div className="absolute inset-y-0 left-0 w-40 pointer-events-none z-20" style={{ background: 'linear-gradient(to right, #0A0A0A, transparent)' }} />
-          <div className="absolute inset-y-0 right-0 w-40 pointer-events-none z-20" style={{ background: 'linear-gradient(to left, #0A0A0A, transparent)' }} />
-
-          {/* Top/bottom fades for clean transition */}
-          <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none z-20" style={{ background: 'linear-gradient(to bottom, #0A0A0A, transparent)' }} />
-          <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none z-20" style={{ background: 'linear-gradient(to top, #0A0A0A, transparent)' }} />
+          {/* Edge fades */}
+          <div className="absolute inset-y-0 left-0 w-48 pointer-events-none z-20" style={{ background: 'linear-gradient(to right, #0A0A0A, transparent)' }} />
+          <div className="absolute inset-y-0 right-0 w-48 pointer-events-none z-20" style={{ background: 'linear-gradient(to left, #0A0A0A, transparent)' }} />
+          <div className="absolute top-0 left-0 right-0 h-40 pointer-events-none z-20" style={{ background: 'linear-gradient(to bottom, #0A0A0A, transparent)' }} />
+          <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none z-20" style={{ background: 'linear-gradient(to top, #0A0A0A, transparent)' }} />
         </div>
       </div>
     </section>
