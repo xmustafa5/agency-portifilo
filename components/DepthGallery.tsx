@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useEffect, useCallback } from 'react'
-import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap'
+import { gsap, useGSAP } from '@/lib/gsap'
 import { ProjectImage } from '@/components/ProjectImage'
 
 interface GalleryItem {
@@ -88,7 +88,7 @@ function CylinderRow({
               height: '175px',
               marginLeft: '-140px',
               marginTop: '-87px',
-              transform: `rotateY(${angle}deg) translateZ(-${RADIUS}px)`,
+              transform: `rotateY(${angle}deg) translateZ(${RADIUS}px)`,
               backfaceVisibility: 'hidden',
             }}
           >
@@ -123,30 +123,21 @@ export function DepthGallery() {
 
   useGSAP(
     () => {
-      // Pin the viewport
-      ScrollTrigger.create({
-        trigger: pinRef.current,
-        start: 'top top',
-        end: 'bottom bottom',
-        pin: viewportRef.current,
-        pinSpacing: false,
-      })
-
       const scrubConfig = {
         trigger: pinRef.current,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 1,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 0.8,
       }
 
       // Row 1 (top) — clockwise
-      gsap.to(row1Ref.current, { rotateY: 360, ease: 'none', scrollTrigger: scrubConfig })
+      gsap.to(row1Ref.current, { rotateY: 180, ease: 'none', scrollTrigger: scrubConfig })
 
-      // Row 2 (middle) — counter-clockwise, 1.5x speed
-      gsap.to(row2Ref.current, { rotateY: -540, ease: 'none', scrollTrigger: { ...scrubConfig } })
+      // Row 2 (middle) — counter-clockwise
+      gsap.to(row2Ref.current, { rotateY: -270, ease: 'none', scrollTrigger: { ...scrubConfig } })
 
-      // Row 3 (bottom) — clockwise, 1.25x speed
-      gsap.to(row3Ref.current, { rotateY: 450, ease: 'none', scrollTrigger: { ...scrubConfig } })
+      // Row 3 (bottom) — clockwise, different speed
+      gsap.to(row3Ref.current, { rotateY: 220, ease: 'none', scrollTrigger: { ...scrubConfig } })
 
       // Scene tilt on scroll
       gsap.fromTo(sceneRef.current, { rotateX: -12 }, {
@@ -193,10 +184,10 @@ export function DepthGallery() {
 
   return (
     <section id="gallery">
-      <div ref={pinRef} style={{ height: '250vh' }}>
+      <div ref={pinRef} className="relative h-screen">
         <div
           ref={viewportRef}
-          className="h-screen w-full overflow-hidden relative"
+          className="h-full w-full overflow-hidden relative"
           style={{ perspective: '1200px' }}
         >
           {/* Title overlay */}
