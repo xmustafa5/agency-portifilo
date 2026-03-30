@@ -3,6 +3,7 @@
 import { useRef } from 'react'
 import { gsap, useGSAP } from '@/lib/gsap'
 import { ArrowUpRight } from 'lucide-react'
+import { ProjectImage } from '@/components/ProjectImage'
 
 const projects = [
   {
@@ -11,7 +12,7 @@ const projects = [
     description:
       'A modern travel booking platform with real-time availability, dynamic pricing, and an immersive destination discovery experience.',
     tags: ['Next.js', 'Node.js', 'PostgreSQL'],
-    gradient: 'linear-gradient(135deg, #F97316 0%, #DC2626 100%)',
+    hue: 25,
   },
   {
     title: 'Savoré Restaurant',
@@ -19,7 +20,7 @@ const projects = [
     description:
       'Full-stack restaurant platform with online ordering, reservation management, and a custom kitchen display system.',
     tags: ['React Native', 'Firebase', 'Stripe'],
-    gradient: 'linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)',
+    hue: 240,
   },
   {
     title: 'NexaRealty',
@@ -27,7 +28,7 @@ const projects = [
     description:
       'Property management SaaS with virtual tours, automated tenant communications, and AI-powered market analysis.',
     tags: ['Next.js', 'Python', 'OpenAI'],
-    gradient: 'linear-gradient(135deg, #10B981 0%, #2563EB 100%)',
+    hue: 160,
   },
   {
     title: 'PulseClinic',
@@ -35,7 +36,7 @@ const projects = [
     description:
       'HIPAA-compliant patient portal with telemedicine, appointment scheduling, and electronic health records integration.',
     tags: ['React', 'Node.js', 'FHIR'],
-    gradient: 'linear-gradient(135deg, #EC4899 0%, #F97316 100%)',
+    hue: 330,
   },
 ]
 
@@ -45,35 +46,26 @@ export function Work() {
   useGSAP(
     () => {
       gsap.to('.work-label', {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
+        opacity: 1, y: 0, duration: 0.6,
         scrollTrigger: { trigger: '.work-label', start: 'top 90%' },
       })
 
       gsap.to('.work-title', {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: 'power2.out',
+        opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
         scrollTrigger: { trigger: '.work-title', start: 'top 90%' },
       })
 
       const cards = gsap.utils.toArray<HTMLElement>('.project-card')
       cards.forEach((card, i) => {
         gsap.to(card, {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          delay: i * 0.1,
-          ease: 'power3.out',
+          opacity: 1, y: 0, duration: 0.9, delay: i * 0.1, ease: 'power3.out',
           scrollTrigger: { trigger: card, start: 'top 90%' },
         })
 
-        const img = card.querySelector('.project-gradient')
+        const img = card.querySelector('.project-img')
         if (img) {
           gsap.to(img, {
-            yPercent: -10,
+            yPercent: -8,
             ease: 'none',
             scrollTrigger: {
               trigger: card,
@@ -115,25 +107,32 @@ export function Work() {
               className="project-card gs-reveal group rounded-2xl border border-border overflow-hidden cursor-pointer transition-all duration-500 hover:border-white/10"
               style={{ backgroundColor: '#111111' }}
             >
+              {/* Project image */}
               <div className="relative h-56 md:h-72 overflow-hidden">
-                <div
-                  className="project-gradient absolute inset-[-20%] scale-110"
-                  style={{ background: project.gradient }}
+                <ProjectImage
+                  title={project.title}
+                  category={project.category}
+                  hue={project.hue}
+                  className="project-img absolute inset-[-10%] w-[120%] h-[120%] object-cover"
                 />
                 <div
                   className="absolute inset-0"
-                  style={{ background: 'linear-gradient(to top, #111111, transparent)' }}
+                  style={{ background: 'linear-gradient(to top, #111111 0%, transparent 60%)' }}
                 />
 
                 <span className="absolute top-6 left-8 font-heading text-7xl font-black text-white/5">
                   {String(i + 1).padStart(2, '0')}
                 </span>
 
-                <div className="absolute top-6 right-6 w-11 h-11 rounded-full flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300" style={{ backgroundColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(12px)' }}>
+                <div
+                  className="absolute top-6 right-6 w-11 h-11 rounded-full flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(12px)' }}
+                >
                   <ArrowUpRight size={18} className="text-white" />
                 </div>
               </div>
 
+              {/* Content */}
               <div className="p-8">
                 <span className="text-[11px] text-muted uppercase tracking-widest font-medium">
                   {project.category}

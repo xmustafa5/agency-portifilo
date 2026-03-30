@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useCallback, useState } from 'react'
 import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap'
+import { ProjectImage } from '@/components/ProjectImage'
 
 interface GalleryItem {
   title: string
@@ -49,7 +50,6 @@ export function DepthGallery() {
 
       const totalDepth = galleryItems.length * Z_GAP + 500
 
-      // Pin the viewport while scrolling through the section
       ScrollTrigger.create({
         trigger: wrapper,
         start: 'top top',
@@ -60,7 +60,6 @@ export function DepthGallery() {
         onLeaveBack: () => setIsActive(false),
       })
 
-      // Drive the camera forward through Z-space
       gsap.to(scene, {
         z: totalDepth,
         ease: 'none',
@@ -72,22 +71,13 @@ export function DepthGallery() {
         },
       })
 
-      // Header reveal
       gsap.to('.depth-label', {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        scrollTrigger: {
-          trigger: wrapper,
-          start: 'top 80%',
-        },
+        opacity: 1, y: 0, duration: 0.6,
+        scrollTrigger: { trigger: wrapper, start: 'top 80%' },
       })
 
-      // Fade header out as we enter the tunnel
       gsap.to('.depth-header', {
-        opacity: 0,
-        y: -50,
-        ease: 'none',
+        opacity: 0, y: -50, ease: 'none',
         scrollTrigger: {
           trigger: wrapper,
           start: 'top top',
@@ -99,7 +89,6 @@ export function DepthGallery() {
     { scope: wrapperRef }
   )
 
-  // Mouse parallax on perspective origin
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!viewportRef.current || !isActive) return
     const xPct = 50 + ((e.clientX / window.innerWidth) - 0.5) * 8
@@ -120,7 +109,6 @@ export function DepthGallery() {
 
   return (
     <section id="gallery">
-      {/* Tall scroll container */}
       <div
         ref={wrapperRef}
         className="relative"
@@ -138,7 +126,7 @@ export function DepthGallery() {
           </h2>
         </div>
 
-        {/* Fixed 3D viewport — only visible while in this section */}
+        {/* Fixed 3D viewport */}
         <div
           ref={viewportRef}
           className="fixed top-0 left-0 w-full h-screen overflow-hidden transition-opacity duration-500"
@@ -150,7 +138,7 @@ export function DepthGallery() {
             zIndex: isActive ? 5 : -1,
           }}
         >
-          {/* The 3D scene */}
+          {/* 3D scene */}
           <div
             ref={sceneRef}
             style={{
@@ -179,20 +167,19 @@ export function DepthGallery() {
                     aspectRatio: '16 / 10',
                   }}
                 >
-                  {/* Card with gradient */}
+                  {/* Card */}
                   <div
                     className="relative w-full h-full rounded-2xl overflow-hidden border border-white/10"
                     style={{
-                      background: `linear-gradient(${135 + i * 25}deg,
-                        hsl(${item.hue}, 70%, 45%) 0%,
-                        hsl(${(item.hue + 60) % 360}, 60%, 30%) 100%)`,
                       boxShadow: `0 20px 60px -10px hsla(${item.hue}, 70%, 30%, 0.4)`,
                     }}
                   >
-                    {/* Image number */}
-                    <span className="absolute top-4 left-5 font-heading text-5xl font-black text-white/10">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
+                    <ProjectImage
+                      title={item.title}
+                      category={item.category}
+                      hue={item.hue}
+                      className="w-full h-full object-cover"
+                    />
 
                     {/* Hover overlay */}
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-400 flex items-end p-5">
@@ -207,12 +194,10 @@ export function DepthGallery() {
                     </div>
                   </div>
 
-                  {/* Subtle glow behind card */}
+                  {/* Glow */}
                   <div
                     className="absolute -inset-2 rounded-2xl -z-10 blur-2xl opacity-20"
-                    style={{
-                      background: `hsl(${item.hue}, 60%, 40%)`,
-                    }}
+                    style={{ background: `hsl(${item.hue}, 60%, 40%)` }}
                   />
                 </div>
               )
@@ -229,17 +214,7 @@ export function DepthGallery() {
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background:
-                'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.85) 100%)',
-            }}
-          />
-
-          {/* Speed lines at edges */}
-          <div
-            className="absolute inset-0 pointer-events-none opacity-30"
-            style={{
-              background:
-                'repeating-conic-gradient(from 0deg at 50% 50%, transparent 0deg, transparent 8deg, rgba(255,255,255,0.01) 9deg, transparent 10deg)',
+              background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.85) 100%)',
             }}
           />
         </div>
