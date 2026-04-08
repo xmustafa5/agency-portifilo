@@ -195,7 +195,7 @@ export function DepthGallery() {
             <span className="gallery-label gs-reveal inline-block text-xs font-semibold tracking-[0.3em] uppercase text-accent mb-4">
               Our Universe
             </span>
-            <h2 className="gallery-title gs-reveal text-5xl md:text-7xl lg:text-8xl font-heading font-black leading-[0.9] tracking-tight text-center">
+            <h2 className="gallery-title gs-reveal text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-heading font-black leading-[0.9] tracking-tight text-center">
               EXPERT DIGITAL
               <br />
               <span className="text-muted">PRODUCTION</span>
