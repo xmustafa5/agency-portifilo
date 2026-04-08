@@ -76,13 +76,9 @@ export function Services() {
           gsap.to(card, {
             opacity: 1,
             y: 0,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 95%',
-              end: 'top 65%',
-              scrub: 0.4,
-            },
+            duration: 0.4,
+            ease: 'power2.out',
+            scrollTrigger: { trigger: card, start: 'top bottom' },
           })
         } else {
           gsap.to(card, {
