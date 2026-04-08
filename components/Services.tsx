@@ -72,14 +72,28 @@ export function Services() {
       const isMobile = window.innerWidth < 768
       const cards = gsap.utils.toArray<HTMLElement>('.service-card')
       cards.forEach((card, i) => {
-        gsap.to(card, {
-          opacity: 1,
-          y: 0,
-          duration: isMobile ? 0.8 : 0.7,
-          delay: isMobile ? 0 : i * 0.08,
-          ease: isMobile ? 'power2.out' : 'power3.out',
-          scrollTrigger: { trigger: card, start: isMobile ? 'top 95%' : 'top 92%' },
-        })
+        if (isMobile) {
+          gsap.to(card, {
+            opacity: 1,
+            y: 0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 95%',
+              end: 'top 65%',
+              scrub: 0.4,
+            },
+          })
+        } else {
+          gsap.to(card, {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            delay: i * 0.08,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: card, start: 'top 92%' },
+          })
+        }
       })
     },
     { scope: containerRef }

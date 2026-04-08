@@ -58,13 +58,23 @@ export function Work() {
       const isMobile = window.innerWidth < 768
       const cards = gsap.utils.toArray<HTMLElement>('.project-card')
       cards.forEach((card, i) => {
-        gsap.to(card, {
-          opacity: 1, y: 0,
-          duration: isMobile ? 0.8 : 0.9,
-          delay: isMobile ? 0 : i * 0.1,
-          ease: isMobile ? 'power2.out' : 'power3.out',
-          scrollTrigger: { trigger: card, start: isMobile ? 'top 95%' : 'top 90%' },
-        })
+        if (isMobile) {
+          gsap.to(card, {
+            opacity: 1, y: 0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 95%',
+              end: 'top 65%',
+              scrub: 0.4,
+            },
+          })
+        } else {
+          gsap.to(card, {
+            opacity: 1, y: 0, duration: 0.9, delay: i * 0.1, ease: 'power3.out',
+            scrollTrigger: { trigger: card, start: 'top 90%' },
+          })
+        }
 
         const img = card.querySelector('.project-img')
         if (img) {
