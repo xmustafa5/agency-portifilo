@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect, useCallback, useState } from 'react'
+import { useRef, useEffect, useCallback } from 'react'
 import { gsap, useGSAP } from '@/lib/gsap'
 import { ProjectImage } from '@/components/ProjectImage'
 
@@ -51,33 +51,18 @@ const row3: GalleryItem[] = [
 
 const ITEMS_PER_ROW = row1.length
 const ANGLE_STEP = 360 / ITEMS_PER_ROW
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false)
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
-  return isMobile
-}
+const RADIUS = 620
 
 function CylinderRow({
   items,
   refProp,
   yOffset,
   angleOffset = 0,
-  radius,
-  cardWidth,
-  cardHeight,
 }: {
   items: GalleryItem[]
   refProp: React.RefObject<HTMLDivElement | null>
   yOffset: number
   angleOffset?: number
-  radius: number
-  cardWidth: number
-  cardHeight: number
 }) {
   return (
     <div
@@ -99,11 +84,11 @@ function CylinderRow({
             key={i}
             className="absolute group cursor-pointer"
             style={{
-              width: `${cardWidth}px`,
-              height: `${cardHeight}px`,
-              marginLeft: `${-cardWidth / 2}px`,
-              marginTop: `${-cardHeight / 2}px`,
-              transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
+              width: '280px',
+              height: '175px',
+              marginLeft: '-140px',
+              marginTop: '-87px',
+              transform: `rotateY(${angle}deg) translateZ(${RADIUS}px)`,
               backfaceVisibility: 'hidden',
             }}
           >
@@ -129,12 +114,6 @@ function CylinderRow({
 }
 
 export function DepthGallery() {
-  const isMobile = useIsMobile()
-  const radius = isMobile ? 320 : 620
-  const cardW = isMobile ? 180 : 280
-  const cardH = isMobile ? 112 : 175
-  const rowGap = isMobile ? 130 : 200
-
   const pinRef = useRef<HTMLDivElement>(null)
   const viewportRef = useRef<HTMLDivElement>(null)
   const row1Ref = useRef<HTMLDivElement>(null)
@@ -212,11 +191,11 @@ export function DepthGallery() {
           style={{ perspective: '1200px' }}
         >
           {/* Title overlay */}
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none px-6">
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
             <span className="gallery-label gs-reveal inline-block text-xs font-semibold tracking-[0.3em] uppercase text-accent mb-4">
               Our Universe
             </span>
-            <h2 className="gallery-title gs-reveal text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-heading font-black leading-[0.9] tracking-tight text-center">
+            <h2 className="gallery-title gs-reveal text-5xl md:text-7xl lg:text-8xl font-heading font-black leading-[0.9] tracking-tight text-center">
               EXPERT DIGITAL
               <br />
               <span className="text-muted">PRODUCTION</span>
@@ -230,9 +209,9 @@ export function DepthGallery() {
             style={{ transformStyle: 'preserve-3d', transform: 'rotateX(-12deg)' }}
           >
             <div style={{ position: 'relative', transformStyle: 'preserve-3d' }}>
-              <CylinderRow items={row1} refProp={row1Ref} yOffset={-rowGap} radius={radius} cardWidth={cardW} cardHeight={cardH} />
-              <CylinderRow items={row2} refProp={row2Ref} yOffset={0} angleOffset={ANGLE_STEP / 1} radius={radius} cardWidth={cardW} cardHeight={cardH} />
-              <CylinderRow items={row3} refProp={row3Ref} yOffset={rowGap} angleOffset={ANGLE_STEP / 1} radius={radius} cardWidth={cardW} cardHeight={cardH} />
+              <CylinderRow items={row1} refProp={row1Ref} yOffset={-200} />
+              <CylinderRow items={row2} refProp={row2Ref} yOffset={0} angleOffset={ANGLE_STEP / 1} />
+              <CylinderRow items={row3} refProp={row3Ref} yOffset={200} angleOffset={ANGLE_STEP / 1} />
             </div>
           </div>
 
@@ -240,8 +219,8 @@ export function DepthGallery() {
           <div className="absolute inset-0 pointer-events-none z-20" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.9) 100%)' }} />
 
           {/* Edge fades */}
-          <div className="absolute inset-y-0 left-0 w-24 md:w-48 pointer-events-none z-20" style={{ background: 'linear-gradient(to right, #0A0A0A, transparent)' }} />
-          <div className="absolute inset-y-0 right-0 w-24 md:w-48 pointer-events-none z-20" style={{ background: 'linear-gradient(to left, #0A0A0A, transparent)' }} />
+          <div className="absolute inset-y-0 left-0 w-48 pointer-events-none z-20" style={{ background: 'linear-gradient(to right, #0A0A0A, transparent)' }} />
+          <div className="absolute inset-y-0 right-0 w-48 pointer-events-none z-20" style={{ background: 'linear-gradient(to left, #0A0A0A, transparent)' }} />
           <div className="absolute top-0 left-0 right-0 h-40 pointer-events-none z-20" style={{ background: 'linear-gradient(to bottom, #0A0A0A, transparent)' }} />
           <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none z-20" style={{ background: 'linear-gradient(to top, #0A0A0A, transparent)' }} />
         </div>
