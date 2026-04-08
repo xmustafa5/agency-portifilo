@@ -78,7 +78,7 @@ export function BentoGrid() {
   }, { scope: containerRef })
 
   return (
-    <section ref={containerRef} id="bento" className="py-36 px-6 md:px-12">
+    <section ref={containerRef} id="bento" className="py-20 sm:py-36 px-4 sm:px-6 md:px-12">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <span className="bento-label gs-reveal inline-block text-xs font-semibold tracking-[0.3em] uppercase text-accent mb-5">Benefits</span>

@@ -28,12 +28,15 @@ export function Navigation() {
 
   useGSAP(
     () => {
-      gsap.from(navRef.current, {
-        y: -100,
+      gsap.fromTo(navRef.current, {
+        y: -60,
         opacity: 0,
+      }, {
+        y: 0,
+        opacity: 1,
         duration: 0.8,
         ease: 'power2.out',
-        delay: 1.8,
+        delay: 0.6,
       })
     },
     { scope: navRef }

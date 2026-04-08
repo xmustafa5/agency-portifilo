@@ -85,7 +85,7 @@ export function Services() {
   )
 
   return (
-    <section ref={containerRef} id="services" className="relative py-36 px-6 md:px-12">
+    <section ref={containerRef} id="services" className="relative py-20 sm:py-36 px-4 sm:px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
           <span className="services-label gs-reveal inline-block text-xs font-semibold tracking-[0.3em] uppercase text-accent mb-5">
@@ -102,7 +102,7 @@ export function Services() {
           {services.map((service) => (
             <div
               key={service.title}
-              className="service-card gs-reveal group relative p-8 rounded-2xl border border-border transition-all duration-500 hover:border-accent/30 cursor-pointer"
+              className="service-card gs-reveal group relative p-5 sm:p-8 rounded-2xl border border-border transition-all duration-500 hover:border-accent/30 cursor-pointer"
               style={{ backgroundColor: '#111111' }}
             >
               <div

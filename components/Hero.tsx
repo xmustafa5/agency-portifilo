@@ -93,24 +93,24 @@ export function Hero() {
       </div>
 
       {/* Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full opacity-[0.06] blur-[200px] bg-accent" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,200vw)] h-[min(800px,200vw)] rounded-full opacity-[0.06] blur-[200px] bg-accent" />
 
-      <div className="hero-title-wrap relative z-10 text-center px-6 max-w-6xl mx-auto">
-        <div className="overflow-hidden mb-8">
-          <p className="hero-line-inner text-sm tracking-[0.4em] uppercase text-muted font-medium">
+      <div className="hero-title-wrap relative z-10 text-center px-4 sm:px-6 max-w-6xl mx-auto w-full">
+        <div className="overflow-hidden mb-4 sm:mb-8">
+          <p className="hero-line-inner text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.4em] uppercase text-muted font-medium">
             Creative Software Agency
           </p>
         </div>
 
         <h1 className="font-heading font-black leading-[0.85] tracking-[-0.03em]">
           <div className="overflow-hidden">
-            <span className="hero-line-inner block text-[clamp(4rem,14vw,13rem)] text-white">
+            <span className="hero-line-inner block text-[clamp(2.5rem,11vw,13rem)] text-white">
               SUSPENDED
             </span>
           </div>
           <div className="overflow-hidden mt-2">
             <span
-              className="hero-line-inner block text-[clamp(4rem,14vw,13rem)]"
+              className="hero-line-inner block text-[clamp(2.5rem,11vw,13rem)]"
               style={{
                 WebkitTextStroke: '2px rgba(255,255,255,0.25)',
                 color: 'transparent',
@@ -121,22 +121,22 @@ export function Hero() {
           </div>
         </h1>
 
-        <p className="hero-sub mt-10 max-w-xl mx-auto text-lg leading-relaxed text-muted">
+        <p className="hero-sub mt-6 sm:mt-10 max-w-xl mx-auto text-base sm:text-lg leading-relaxed text-muted">
           We build digital experiences that suspend disbelief.
           <br />
           Websites &middot; Apps &middot; Automations
         </p>
 
-        <div className="hero-cta mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="hero-cta mt-8 sm:mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
           <a
             href="#work"
-            className="inline-flex items-center gap-2 px-10 py-4 bg-accent text-black font-heading font-bold text-sm uppercase tracking-widest rounded-full cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(249,115,22,0.3)]"
+            className="inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 bg-accent text-black font-heading font-bold text-xs sm:text-sm uppercase tracking-widest rounded-full cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(249,115,22,0.3)]"
           >
             View Our Work
           </a>
           <a
             href="#contact"
-            className="inline-flex items-center gap-2 px-10 py-4 border border-white/15 text-white font-heading font-medium text-sm uppercase tracking-widest rounded-full cursor-pointer transition-all duration-300 hover:border-accent hover:text-accent"
+            className="inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 border border-white/15 text-white font-heading font-medium text-xs sm:text-sm uppercase tracking-widest rounded-full cursor-pointer transition-all duration-300 hover:border-accent hover:text-accent"
           >
             Get in Touch
           </a>

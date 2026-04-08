@@ -75,7 +75,7 @@ export function Process() {
   )
 
   return (
-    <section ref={containerRef} id="process" className="py-36 px-6 md:px-12">
+    <section ref={containerRef} id="process" className="py-20 sm:py-36 px-4 sm:px-6 md:px-12">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-20">
           <span className="process-label gs-reveal inline-block text-xs font-semibold tracking-[0.3em] uppercase text-accent mb-5">
@@ -94,7 +94,7 @@ export function Process() {
 
           <div className="space-y-12">
             {steps.map((step, i) => (
-              <div key={step.number} className="process-step gs-reveal relative flex gap-8 md:gap-12 items-start">
+              <div key={step.number} className="process-step gs-reveal relative flex gap-4 sm:gap-8 md:gap-12 items-start">
                 <div className="relative shrink-0 flex flex-col items-center">
                   <div className="w-14 h-14 rounded-2xl border border-border flex items-center justify-center text-accent z-10 relative" style={{ backgroundColor: '#111111' }}>
                     <step.icon size={22} strokeWidth={1.5} />

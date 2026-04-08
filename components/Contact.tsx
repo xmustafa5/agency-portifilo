@@ -31,10 +31,10 @@ export function Contact() {
   )
 
   return (
-    <section ref={containerRef} id="contact" className="py-36 px-6 md:px-12">
+    <section ref={containerRef} id="contact" className="py-20 sm:py-36 px-4 sm:px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
-        <div className="contact-big overflow-hidden mb-24">
-          <h2 className="text-5xl md:text-7xl lg:text-8xl font-heading font-black leading-[0.95]">
+        <div className="contact-big overflow-hidden mb-12 sm:mb-24">
+          <h2 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-heading font-black leading-[0.95]">
             <span className="block overflow-hidden">
               {"Let's build".split('').map((char, i) => (
                 <span key={i} className="inline-block">

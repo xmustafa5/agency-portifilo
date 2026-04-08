@@ -52,7 +52,7 @@ export function About() {
   )
 
   return (
-    <section ref={containerRef} id="about" className="py-36 overflow-hidden">
+    <section ref={containerRef} id="about" className="py-20 sm:py-36 overflow-hidden">
       {/* Marquee */}
       <div className="mb-28 border-y border-border py-5 overflow-hidden">
         <div className="marquee-track flex whitespace-nowrap">
@@ -70,7 +70,7 @@ export function About() {
               ].map((item) => (
                 <span
                   key={`${item}-${idx}`}
-                  className="mx-8 font-heading text-5xl md:text-7xl font-black text-white/[0.04] uppercase select-none"
+                  className="mx-4 md:mx-8 font-heading text-3xl sm:text-5xl md:text-7xl font-black text-white/[0.04] uppercase select-none"
                 >
                   {item}
                 </span>
@@ -80,7 +80,7 @@ export function About() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
           <div>
             <span className="about-label gs-reveal inline-block text-xs font-semibold tracking-[0.3em] uppercase text-accent mb-5">
@@ -117,10 +117,10 @@ export function About() {
               {stats.map((stat) => (
                 <div
                   key={stat.label}
-                  className="stat-card gs-reveal p-8 border border-border rounded-2xl text-center hover:border-accent/20 transition-colors duration-300"
+                  className="stat-card gs-reveal p-5 sm:p-8 border border-border rounded-2xl text-center hover:border-accent/20 transition-colors duration-300"
                   style={{ backgroundColor: '#111111' }}
                 >
-                  <span className="block font-heading text-4xl md:text-5xl font-black text-accent">
+                  <span className="block font-heading text-3xl sm:text-4xl md:text-5xl font-black text-accent">
                     {stat.value}
                   </span>
                   <span className="block mt-3 text-sm text-muted">

@@ -81,7 +81,7 @@ export function Work() {
   )
 
   return (
-    <section ref={containerRef} id="work" className="relative py-36 px-6 md:px-12">
+    <section ref={containerRef} id="work" className="relative py-20 sm:py-36 px-4 sm:px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-16">
           <div>
@@ -120,7 +120,7 @@ export function Work() {
                   style={{ background: 'linear-gradient(to top, #111111 0%, transparent 60%)' }}
                 />
 
-                <span className="absolute top-6 left-8 font-heading text-7xl font-black text-white/5">
+                <span className="absolute top-4 left-5 sm:top-6 sm:left-8 font-heading text-5xl sm:text-7xl font-black text-white/5">
                   {String(i + 1).padStart(2, '0')}
                 </span>
 
@@ -133,7 +133,7 @@ export function Work() {
               </div>
 
               {/* Content */}
-              <div className="p-8">
+              <div className="p-5 sm:p-8">
                 <span className="text-[11px] text-muted uppercase tracking-widest font-medium">
                   {project.category}
                 </span>

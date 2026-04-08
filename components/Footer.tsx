@@ -2,7 +2,7 @@
 
 export function Footer() {
   return (
-    <footer className="border-t border-border py-12 px-6 md:px-12">
+    <footer className="border-t border-border py-8 sm:py-12 px-4 sm:px-6 md:px-12">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         <span className="font-heading font-black text-lg text-white">
           SUSPENDED<span className="text-accent">.</span>
